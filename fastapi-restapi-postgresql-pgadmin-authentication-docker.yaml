@@ -1,0 +1,202 @@
+namespace: fastapi-restapi-postgresql-pgadmin-authentication-docker
+fastapi-restapi-postgresql-pgadmin-authentication-docker:
+  defines: runnable
+  metadata:
+    name: fastapi-restapi-postgresql-pgadmin-authentication-docker
+    description: >-
+      A FastAPI application with PostgreSQL database and PgAdmin, includes
+      features like user authentication.
+    icon: https://emojiapi.dev/api/v1/rocket.svg
+  containers:
+    fastapi-restapi-postgresql-pgadmin-authentication-docker:
+      build: .
+  services:
+    fastapi-server-port:
+      container: fastapi-restapi-postgresql-pgadmin-authentication-docker
+      port: 8000
+      host-port: 8000
+      publish: false
+      protocol: TCP
+      description: The port on which the FastAPI server runs on.
+  connections:
+    postgres-db:
+      target: fastapi-restapi-postgresql-pgadmin-authentication-docker/db
+      service: postgres
+    smtp:
+      target: smtp/base
+      service: service
+  variables:
+    domain:
+      env: DOMAIN
+      type: string
+      description: The domain on which the application runs.
+      value: '!!!SETME!!!'
+    project-name:
+      env: PROJECT_NAME
+      type: string
+      description: Name of the project.
+      value: API docs
+    secret-key:
+      env: SECRET_KEY
+      type: string
+      description: Secret key for the application.
+      value: '!!!SETME!!!'
+    first-superuser:
+      env: FIRST_SUPERUSER
+      type: string
+      description: First superuser email.
+      value: '!!!SETME!!!'
+    first-superuser-password:
+      env: FIRST_SUPERUSER_PASSWORD
+      type: string
+      description: First superuser password.
+      value: '!!!SETME!!!'
+    smtp-port:
+      env: SMTP_PORT
+      type: int
+      description: SMTP port.
+      value: <- connection-port("smtp")
+    smtp-host:
+      env: SMTP_HOST
+      type: string
+      description: SMTP host.
+      value: <- connection-hostname("smtp")
+    smtp-user:
+      env: SMTP_USER
+      type: string
+      description: SMTP user.
+      value: '!!!SETME!!!'
+    smtp-password:
+      env: SMTP_PASSWORD
+      type: string
+      description: SMTP password.
+      value: '!!!SETME!!!'
+    emails-from-email:
+      env: EMAILS_FROM_EMAIL
+      type: string
+      description: Default email sender.
+      value: no-reply@gmail.com
+    server-name:
+      env: SERVER_NAME
+      type: string
+      description: Server name.
+      value: API
+    server-host:
+      env: SERVER_HOST
+      type: string
+      description: Server host.
+      value: http://localhost:8900
+    postgres-user:
+      env: POSTGRES_USER
+      type: string
+      description: PostgreSQL user.
+      value: '!!!SETME!!!'
+    postgres-password:
+      env: POSTGRES_PASSWORD
+      type: string
+      description: PostgreSQL password.
+      value: '!!!SETME!!!'
+    postgres-db:
+      env: POSTGRES_DB
+      type: string
+      description: PostgreSQL database name.
+      value: '!!!SETME!!!'
+    postgres-port:
+      env: POSTGRES_PORT
+      type: int
+      description: PostgreSQL port.
+      value: <- connection-port("postgres-db")
+    postgres-server:
+      env: POSTGRES_SERVER
+      type: string
+      description: PostgreSQL server.
+      value: <- connection-hostname("postgres-db")
+    api-v1-str:
+      env: API_V1_STR
+      type: string
+      description: API v1 str.
+      value: /api/v1
+    access-token-expire-minutes:
+      env: ACCESS_TOKEN_EXPIRE_MINUTES
+      type: int
+      description: Access token expire minutes.
+      value: '11440'
+    backend-cors-origins:
+      env: BACKEND_CORS_ORIGINS
+      type: List str
+      description: Backend cors origins.
+      value: '!!!SETME!!!'
+    smtp-tls:
+      env: SMTP_TLS
+      type: string
+      description: Enable/Disable SMTP TLS.
+      value: 'true'
+    sentry-dsn:
+      env: SENTRY_DSN
+      type: string
+      description: Sentry data source name.
+      value: '!!!SETME!!!'
+    sqlalchemy-database-uri:
+      env: SQLALCHEMY_DATABASE_URI
+      type: string
+      description: SQLAlchemy database uri.
+      value: '!!!SETME!!!'
+    email-reset-token-expire-hours:
+      env: EMAIL_RESET_TOKEN_EXPIRE_HOURS
+      type: int
+      description: Email reset token expire hours.
+      value: '48'
+    email-templates-dir:
+      env: EMAIL_TEMPLATES_DIR
+      type: string
+      description: Email templates dir.
+      value: '!!!SETME!!!'
+    email-test-user:
+      env: EMAIL_TEST_USER
+      type: string
+      description: Email test user.
+      value: test@example.com
+    emails-enabled:
+      env: EMAILS_ENABLED
+      type: string
+      description: Emails enabled.
+      value: 'false'
+    users-open-registration:
+      env: USERS_OPEN_REGISTRATION
+      type: string
+      description: Flag to enable/disable open registration.
+      value: 'true'
+    project-dir:
+      env: PROJECT_DIR
+      type: string
+      description: Project dir.
+      value: '!!!SETME!!!'
+    app-dir:
+      env: APP_DIR
+      type: string
+      description: App dir.
+      value: '!!!SETME!!!'
+    upload-dir:
+      env: UPLOAD_DIR
+      type: string
+      description: Upload dir.
+      value: '!!!SETME!!!'
+    output-dir:
+      env: OUTPUT_DIR
+      type: string
+      description: Output dir.
+      value: '!!!SETME!!!'
+    models-dir:
+      env: MODELS_DIR
+      type: string
+      description: Models dir.
+      value: '!!!SETME!!!'
+db:
+  defines: runnable
+  inherits: postgresql/db
+stack:
+  defines: group
+  runnable-list:
+    - >-
+      fastapi-restapi-postgresql-pgadmin-authentication-docker/fastapi-restapi-postgresql-pgadmin-authentication-docker
+    - fastapi-restapi-postgresql-pgadmin-authentication-docker/db
