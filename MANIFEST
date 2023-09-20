@@ -1,0 +1,2 @@
+REPO fastapi-restapi-postgresql-pgadmin-authentication-docker
+LOAD fastapi-restapi-postgresql-pgadmin-authentication-docker.yaml

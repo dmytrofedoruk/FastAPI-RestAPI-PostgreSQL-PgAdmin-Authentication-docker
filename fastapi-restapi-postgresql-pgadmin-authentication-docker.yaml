@@ -1,0 +1,158 @@
+namespace: fastapi-restapi-postgresql-pgadmin-authentication-docker
+fastapi-restapi-postgresql-pgadmin-authentication-docker:
+  defines: runnable
+  metadata:
+    name: fastapi-restapi-postgresql-pgadmin-authentication-docker
+    description: >-
+      This application serves as a REST API with FastAPI, using PostgreSQL as
+      its database, PgAdmin GUI and Docker for containerization.
+    icon: https://emojiapi.dev/api/v1/robot.svg
+  containers:
+    fastapi-restapi-postgresql-pgadmin-authentication-docker:
+      build: .
+  services:
+    pgadmin-port:
+      container: fastapi-restapi-postgresql-pgadmin-authentication-docker
+      port: 5050
+      host-port: 5050
+      publish: false
+      protocol: TCP
+      description: This port is exposed for accessing the PgAdmin GUI.
+    pgdb-port:
+      container: fastapi-restapi-postgresql-pgadmin-authentication-docker
+      port: <- $postgres-port
+      host-port: <- $postgres-port
+      publish: false
+      protocol: TCP
+      description: This port is exposed for accessing the PostgreSQL database.
+    api-service-port:
+      container: fastapi-restapi-postgresql-pgadmin-authentication-docker
+      port: 8000
+      host-port: 8000
+      publish: false
+      protocol: TCP
+      description: This port is exposed for accessing the main FastAPI application.
+  connections:
+    pgdb:
+      target: fastapi-restapi-postgresql-pgadmin-authentication-docker/db
+      service: postgres
+  variables:
+    domain:
+      env: DOMAIN
+      type: string
+      description: Domain on which the application runs.
+      value: localhost
+    project-name:
+      env: PROJECT_NAME
+      type: string
+      description: Name of the project.
+      value: API docs
+    secret-key:
+      env: SECRET_KEY
+      type: string
+      description: Application secret key.
+      value: '!!!SETME-USE-SECRETS!!!'
+    first-superuser:
+      env: FIRST_SUPERUSER
+      type: string
+      description: Initial superuser email.
+      value: yourname@gmail.com
+    first-superuser-password:
+      env: FIRST_SUPERUSER_PASSWORD
+      type: string
+      description: Initial superuser password.
+      value: '!!!SETME-USE-SECRETS!!!'
+    smtp-tls:
+      env: SMTP_TLS
+      type: string
+      description: Secure SMTP connection.
+      value: 'True'
+    smtp-port:
+      env: SMTP_PORT
+      type: string
+      description: SMTP service port.
+      value: '25'
+    smtp-host:
+      env: SMTP_HOST
+      type: string
+      description: SMTP service host.
+      value: '!!!SETME!!!'
+    smtp-user:
+      env: SMTP_USER
+      type: string
+      description: SMTP service username.
+      value: '!!!SETME!!!'
+    smtp-password:
+      env: SMTP_PASSWORD
+      type: string
+      description: SMTP service password.
+      value: '!!!SETME!!!'
+    emails-from-email:
+      env: EMAILS_FROM_EMAIL
+      type: string
+      description: Email from which all service emails will be sent.
+      value: no-reply@gmail.com
+    users-open-registration:
+      env: USERS_OPEN_REGISTRATION
+      type: string
+      description: Flag to enable users to register on their own.
+      value: 'True'
+    server-name:
+      env: SERVER_NAME
+      type: string
+      description: Name of the server.
+      value: API
+    server-host:
+      env: SERVER_HOST
+      type: string
+      description: Host of the server.
+      value: http://localhost:8900
+    postgres-user:
+      env: POSTGRES_USER
+      type: string
+      description: Name of the default user of the PostgreSQL service.
+      value: '!!!SETME!!!'
+    postgres-password:
+      env: POSTGRES_PASSWORD
+      type: string
+      description: Password of the PostgreSQL service.
+      value: '!!!SETME!!!'
+    postgres-db:
+      env: POSTGRES_DB
+      type: string
+      description: Name of the database in PostgreSQL service.
+      value: '!!!SETME!!!'
+    postgres-port:
+      env: POSTGRES_PORT
+      type: string
+      description: Port of the PostgreSQL service.
+      value: <- connection-port("pgdb")
+    postgres-server:
+      env: POSTGRES_SERVER
+      type: string
+      description: Host of the PostgreSQL service.
+      value: <- connection-hostname("pgdb")
+    pgadmin-default-email:
+      env: PGADMIN_DEFAULT_EMAIL
+      type: string
+      description: Email for admin in PgAdmin.
+      value: '!!!SETME!!!'
+    pgadmin-default-password:
+      env: PGADMIN_DEFAULT_PASSWORD
+      type: string
+      description: Password for admin in PgAdmin.
+      value: '!!!SETME!!!'
+    sentry-dsn:
+      env: SENTRY_DSN
+      type: string
+      description: Data source name (DSN) for Sentry.
+      value: '!!!SETME!!!'
+db:
+  defines: runnable
+  inherits: postgresql/db
+stack:
+  defines: group
+  runnable-list:
+    - >-
+      fastapi-restapi-postgresql-pgadmin-authentication-docker/fastapi-restapi-postgresql-pgadmin-authentication-docker
+    - fastapi-restapi-postgresql-pgadmin-authentication-docker/db
